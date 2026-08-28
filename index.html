@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>🏃‍♂️ 모션인식 수학 올림픽! 🏅</title>
+<meta name="description" content="몸을 움직이며 신나게 푸는 초등 수학 교실! 펀치로 정답을 치고, 스쿼트로 오답을 피하는 AI 모션인식 수학 올림픽 포털입니다." />
+<meta name="theme-color" content="#FFD166" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="🏃‍♂️ 모션인식 수학 올림픽! 🏅" />
+<meta property="og:description" content="몸을 움직이며 신나게 푸는 초등 수학 교실 — 1학년부터 6학년까지!" />
+<meta property="og:locale" content="ko_KR" />
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏅</text></svg>" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          sun:   '#FFD166',
+          coral: '#FF6B6B',
+          mint:  '#06D6A0',
+          sky:   '#118AB2',
+          cream: '#FFFDF7',
+          ink:   '#1E293B',
+        },
+        fontFamily: {
+          display: ['Jua', 'Pretendard Variable', 'sans-serif'],
+          hand:    ['Gaegu', 'Jua', 'sans-serif'],
+          body:    ['Pretendard Variable', 'Pretendard', 'system-ui', 'sans-serif'],
+        },
+        boxShadow: {
+          pop:    '5px 5px 0 0 #1E293B',
+          'pop-lg': '9px 9px 0 0 #1E293B',
+          'pop-xl': '14px 14px 0 0 #1E293B',
+        },
+      },
+    },
+  };
+</script>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="bg-cream font-body text-ink">
+
+<!-- ══════════ 로딩 화면 ══════════ -->
+<div id="loader" class="loader">
+  <div class="loader-mascot">🏃‍♂️</div>
+  <div class="loader-title font-display">모션인식 수학 올림픽</div>
+  <div class="loader-bar"><span></span></div>
+  <p class="loader-tip font-display">준비운동 중… 몸을 풀어 주세요! 💪</p>
+</div>
+
+<!-- ══════════ 배경 레이어 ══════════ -->
+<div class="bg-scene" aria-hidden="true">
+  <div class="bg-sky"></div>
+  <div class="bg-symbols" id="bgSymbols"></div>
+  <div class="bg-clouds">
+    <i class="cloud c1"></i><i class="cloud c2"></i><i class="cloud c3"></i>
+    <i class="cloud c4"></i><i class="cloud c5"></i>
+  </div>
+  <div class="bg-hills"></div>
+</div>
+
+<!-- ══════════ 사운드 토글 ══════════ -->
+<button id="soundBtn" class="sound-btn" aria-label="효과음 켜기/끄기" title="효과음 켜기/끄기">
+  <span id="soundIcon">🔊</span>
+</button>
+
+<!-- ══════════ 헤더 / 히어로 ══════════ -->
+<header class="relative overflow-hidden">
+  <div class="mx-auto max-w-7xl px-5 pt-10 pb-4 sm:pt-14">
+
+    <div class="text-center">
+      <p class="hero-badge font-display">
+        <span class="blink-dot"></span> AI 모션인식 · 초등 전학년 수학 놀이터
+      </p>
+
+      <h1 class="hero-title font-display" id="heroTitle" aria-label="모션인식 수학 올림픽!">
+        <span class="ht-line">
+          <span class="ht-emoji">🏃‍♂️</span><span class="jump" style="--d:.00s">모</span><span class="jump" style="--d:.05s">션</span><span class="jump" style="--d:.10s">인</span><span class="jump" style="--d:.15s">식</span>
+        </span>
+        <span class="ht-line">
+          <span class="jump gradient-word" style="--d:.20s">수</span><span class="jump gradient-word" style="--d:.25s">학</span>
+          <span class="jump gradient-word" style="--d:.32s">올</span><span class="jump gradient-word" style="--d:.37s">림</span><span class="jump gradient-word" style="--d:.42s">픽</span><span class="jump" style="--d:.47s">!</span><span class="ht-emoji">🏅</span>
+        </span>
+      </h1>
+
+      <p class="hero-sub font-display">몸을 움직이며 신나게 푸는 초등 수학 교실</p>
+
+      <div class="hero-tag font-display">
+        <span class="tag-chip chip-coral">👊 펀치로 정답을 치고!</span>
+        <span class="tag-chip chip-mint">🏋️‍♂️ 스쿼트로 오답을 피하자!</span>
+      </div>
+    </div>
+
+    <!-- 라이브 데모 -->
+    <section class="demo-stage" aria-label="게임 미리보기">
+      <div class="demo-frame">
+        <div class="demo-topbar font-display">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="demo-cam">🎥 CAM ON</span>
+          <span class="demo-score">SCORE <b id="demoScore">0</b></span>
+        </div>
+
+        <div class="demo-body">
+          <div class="demo-question font-display" id="demoQ">7 × 8 = ?</div>
+          <div class="demo-answers" id="demoAnswers"></div>
+          <div class="demo-fist" id="demoFist">👊</div>
+          <div class="demo-burst" id="demoBurst">POW!</div>
+          <div class="demo-player" id="demoPlayer">🧑‍🎤</div>
+          <div class="demo-hint font-display" id="demoHint">정답을 향해 펀치! 👊</div>
+        </div>
+      </div>
+      <p class="demo-caption font-hand">웹캠 앞에서 몸만 움직이면 끝! 설치도, 준비물도 없어요 ✨</p>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-row">
+      <a href="#grades" class="btn btn-sun font-display sfx">🎮 학년 골라서 시작하기</a>
+      <a href="#howto" class="btn btn-white font-display sfx">❓ 어떻게 하나요?</a>
+    </div>
+  </div>
+
+  <!-- 흐르는 띠 -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track font-display" id="tickerTrack"></div>
+  </div>
+</header>
+
+<main>
+  <!-- ══════════ 매스 핏 플로우 ══════════ -->
+  <section class="mx-auto max-w-7xl px-5 mt-10 sm:mt-14">
+    <a href="https://math-fit-flow.vercel.app" target="_blank" rel="noopener" class="featured reveal sfx">
+      <div class="featured-glow" aria-hidden="true"></div>
+      <div class="featured-emoji">🥊</div>
+      <div class="featured-text">
+        <span class="featured-badge font-display">✨ NEW · 대표 게임</span>
+        <h2 class="featured-title font-display">매스 핏 플로우 <span class="en">Math&nbsp;Fit&nbsp;Flow</span></h2>
+        <p class="featured-desc">리듬에 맞춰 펀치와 스쿼트로 수학 문제를 격파! 초등 전학년이 함께 즐기는 대표 종목이에요.</p>
+      </div>
+      <div class="featured-go font-display">바로가기 <span class="arrow">→</span></div>
+    </a>
+  </section>
+
+  <!-- ══════════ 어떻게 하나요 ══════════ -->
+  <section id="howto" class="mx-auto max-w-7xl px-5 mt-16 sm:mt-24 scroll-mt-6">
+    <h2 class="sec-title font-display reveal"><span class="sec-emoji">❓</span> 어떻게 하나요?</h2>
+    <p class="sec-sub font-hand reveal">딱 3단계면 준비 끝!</p>
+
+    <ol class="howto-grid">
+      <li class="howto-card reveal" style="--i:0">
+        <span class="howto-num font-display">1</span>
+        <div class="howto-icon">📷</div>
+        <h3 class="howto-t font-display">카메라를 켜요</h3>
+        <p class="howto-d">노트북·태블릿 웹캠만 있으면 OK! 별도 앱 설치가 필요 없어요.</p>
+      </li>
+      <li class="howto-card reveal" style="--i:1">
+        <span class="howto-num font-display">2</span>
+        <div class="howto-icon">🔢</div>
+        <h3 class="howto-t font-display">문제가 날아와요</h3>
+        <p class="howto-d">학년 수준에 딱 맞는 수학 문제가 화면 위로 등장합니다.</p>
+      </li>
+      <li class="howto-card reveal" style="--i:2">
+        <span class="howto-num font-display">3</span>
+        <div class="howto-icon">🤸</div>
+        <h3 class="howto-t font-display">몸으로 답해요</h3>
+        <p class="howto-d">펀치·스쿼트·점프! AI가 동작을 알아보고 바로 채점해 줘요.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ══════════ 학년 선택 ══════════ -->
+  <section id="grades" class="mx-auto max-w-7xl px-5 mt-16 sm:mt-24 scroll-mt-4">
+    <h2 class="sec-title font-display reveal"><span class="sec-emoji">🗺️</span> 학년을 골라 보세요!</h2>
+    <p class="sec-sub font-hand reveal">우리 반 스테이지는 어디일까? 카드를 눌러 출발! 🚩</p>
+
+    <div class="grade-grid" id="gradeGrid"></div>
+  </section>
+
+  <!-- ══════════ 숫자 ══════════ -->
+  <section class="mx-auto max-w-7xl px-5 mt-16 sm:mt-24">
+    <div class="stats reveal">
+      <div class="stat"><b class="font-display" data-count="6">0</b><span>개 학년 스테이지</span></div>
+      <div class="stat"><b class="font-display" data-count="30" data-suffix="+">0</b><span>가지 올림픽 종목</span></div>
+      <div class="stat"><b class="font-display" data-count="0" data-text="0원">0</b><span>설치·준비물 없음</span></div>
+      <div class="stat"><b class="font-display" data-count="100" data-suffix="%">0</b><span>움직이는 즐거움</span></div>
+    </div>
+  </section>
+
+  <!-- ══════════ 선생님 안내 ══════════ -->
+  <section class="mx-auto max-w-7xl px-5 mt-16 sm:mt-24">
+    <div class="teacher reveal">
+      <div class="teacher-emoji">🍎</div>
+      <div>
+        <h2 class="teacher-title font-display">선생님께 드리는 안내</h2>
+        <ul class="teacher-list">
+          <li><b>크롬(Chrome)</b> 브라우저에서 가장 잘 동작해요.</li>
+          <li>첫 실행 시 <b>카메라 권한 허용</b>을 눌러 주세요. 영상은 기기 안에서만 처리되고 저장·전송되지 않아요.</li>
+          <li>화면에서 <b>2~3걸음 떨어져</b> 상반신이 보이게 서면 인식이 잘 돼요.</li>
+          <li>TV·전자칠판에 띄우면 <b>학급 전체 활동</b>으로도 좋아요.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ══════════ 푸터 ══════════ -->
+<footer class="footer">
+  <div class="mx-auto max-w-7xl px-5 text-center">
+    <div class="footer-emojis">🥇 🏃 🥊 🏋️ 🎯 ⚾ ❄️ ☀️</div>
+    <p class="footer-title font-display">모션인식 수학 올림픽</p>
+    <p class="footer-sub">몸을 움직이며 신나게 푸는 초등 수학 교실</p>
+    <p class="footer-copy">© 2026 Motion Math Olympics · 초등 수학 신체활동 학습 포털</p>
+  </div>
+</footer>
+
+<!-- 색종이 캔버스 -->
+<canvas id="confetti" class="confetti-canvas" aria-hidden="true"></canvas>
+
+<script src="js/main.js"></script>
+</body>
+</html>
