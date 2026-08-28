@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>🏃‍♂️ 모션인식 수학 올림픽! 🏅</title>
-<meta name="description" content="몸을 움직이며 신나게 푸는 초등 수학 교실! 펀치로 정답을 치고, 스쿼트로 오답을 피하는 AI 모션인식 수학 올림픽 포털입니다." />
+<meta name="description" content="몸을 움직이며 신나게 푸는 초등 수학 교실! 학년별 모션인식 수학 올림픽과 매스 핏 플로우까지 한 곳에서 만나는 포털입니다." />
 <meta name="theme-color" content="#FFD166" />
 
 <meta property="og:type" content="website" />
@@ -97,31 +97,10 @@
       <p class="hero-sub font-display">몸을 움직이며 신나게 푸는 초등 수학 교실</p>
 
       <div class="hero-tag font-display">
-        <span class="tag-chip chip-coral">👊 펀치로 정답을 치고!</span>
-        <span class="tag-chip chip-mint">🏋️‍♂️ 스쿼트로 오답을 피하자!</span>
+        <span class="tag-chip chip-coral">🏃 뛰고 점프하며 배우는 수학</span>
+        <span class="tag-chip chip-mint">🏅 1학년부터 6학년까지 학년별 미션</span>
       </div>
     </div>
-
-    <!-- 라이브 데모 -->
-    <section class="demo-stage" aria-label="게임 미리보기">
-      <div class="demo-frame">
-        <div class="demo-topbar font-display">
-          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-          <span class="demo-cam">🎥 CAM ON</span>
-          <span class="demo-score">SCORE <b id="demoScore">0</b></span>
-        </div>
-
-        <div class="demo-body">
-          <div class="demo-question font-display" id="demoQ">7 × 8 = ?</div>
-          <div class="demo-answers" id="demoAnswers"></div>
-          <div class="demo-fist" id="demoFist">👊</div>
-          <div class="demo-burst" id="demoBurst">POW!</div>
-          <div class="demo-player" id="demoPlayer">🧑‍🎤</div>
-          <div class="demo-hint font-display" id="demoHint">정답을 향해 펀치! 👊</div>
-        </div>
-      </div>
-      <p class="demo-caption font-hand">웹캠 앞에서 몸만 움직이면 끝! 설치도, 준비물도 없어요 ✨</p>
-    </section>
 
     <!-- CTA -->
     <div class="cta-row">
@@ -137,22 +116,8 @@
 </header>
 
 <main>
-  <!-- ══════════ 매스 핏 플로우 ══════════ -->
-  <section class="mx-auto max-w-7xl px-5 mt-10 sm:mt-14">
-    <a href="https://math-fit-flow.vercel.app" target="_blank" rel="noopener" class="featured reveal sfx">
-      <div class="featured-glow" aria-hidden="true"></div>
-      <div class="featured-emoji">🥊</div>
-      <div class="featured-text">
-        <span class="featured-badge font-display">✨ NEW · 대표 게임</span>
-        <h2 class="featured-title font-display">매스 핏 플로우 <span class="en">Math&nbsp;Fit&nbsp;Flow</span></h2>
-        <p class="featured-desc">리듬에 맞춰 펀치와 스쿼트로 수학 문제를 격파! 초등 전학년이 함께 즐기는 대표 종목이에요.</p>
-      </div>
-      <div class="featured-go font-display">바로가기 <span class="arrow">→</span></div>
-    </a>
-  </section>
-
   <!-- ══════════ 어떻게 하나요 ══════════ -->
-  <section id="howto" class="mx-auto max-w-7xl px-5 mt-16 sm:mt-24 scroll-mt-6">
+  <section id="howto" class="mx-auto max-w-7xl px-5 mt-10 sm:mt-14 scroll-mt-6">
     <h2 class="sec-title font-display reveal"><span class="sec-emoji">❓</span> 어떻게 하나요?</h2>
     <p class="sec-sub font-hand reveal">딱 3단계면 준비 끝!</p>
 
@@ -173,12 +138,12 @@
         <span class="howto-num font-display">3</span>
         <div class="howto-icon">🤸</div>
         <h3 class="howto-t font-display">몸으로 답해요</h3>
-        <p class="howto-d">펀치·스쿼트·점프! AI가 동작을 알아보고 바로 채점해 줘요.</p>
+        <p class="howto-d">종목마다 다른 동작으로 답해요! AI가 알아보고 바로 채점해 줘요.</p>
       </li>
     </ol>
   </section>
 
-  <!-- ══════════ 학년 선택 ══════════ -->
+  <!-- ══════════ 학년 선택 (메인) ══════════ -->
   <section id="grades" class="mx-auto max-w-7xl px-5 mt-16 sm:mt-24 scroll-mt-4">
     <h2 class="sec-title font-display reveal"><span class="sec-emoji">🗺️</span> 학년을 골라 보세요!</h2>
     <p class="sec-sub font-hand reveal">우리 반 스테이지는 어디일까? 카드를 눌러 출발! 🚩</p>
@@ -194,6 +159,44 @@
       <div class="stat"><b class="font-display" data-count="0" data-text="0원">0</b><span>설치·준비물 없음</span></div>
       <div class="stat"><b class="font-display" data-count="100" data-suffix="%">0</b><span>움직이는 즐거움</span></div>
     </div>
+  </section>
+
+  <!-- ══════════ 기타 게임 (별도 콘텐츠) ══════════ -->
+  <section id="extra" class="mx-auto max-w-7xl px-5 mt-16 sm:mt-24 scroll-mt-4">
+    <h2 class="sec-title font-display reveal"><span class="sec-emoji">🎮</span> 기타 게임</h2>
+    <p class="sec-sub font-hand reveal">학년 스테이지와는 별개로 즐기는 개별 게임이에요 ✨</p>
+
+    <!-- 매스 핏 플로우 라이브 데모 -->
+    <section class="demo-stage reveal" style="margin-top:28px" aria-label="매스 핏 플로우 미리보기">
+      <div class="demo-frame">
+        <div class="demo-topbar font-display">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="demo-cam">🎥 CAM ON</span>
+          <span class="demo-score">SCORE <b id="demoScore">0</b></span>
+        </div>
+
+        <div class="demo-body">
+          <div class="demo-question font-display" id="demoQ">7 × 8 = ?</div>
+          <div class="demo-answers" id="demoAnswers"></div>
+          <div class="demo-fist" id="demoFist">👊</div>
+          <div class="demo-burst" id="demoBurst">POW!</div>
+          <div class="demo-player" id="demoPlayer">🧑‍🎤</div>
+          <div class="demo-hint font-display" id="demoHint">정답을 향해 펀치! 👊</div>
+        </div>
+      </div>
+      <p class="demo-caption font-hand">매스 핏 플로우 미리보기 — 펀치로 정답을 치고, 스쿼트로 오답을 피해요 ✨</p>
+    </section>
+
+    <a href="https://math-fit-flow.vercel.app" target="_blank" rel="noopener" class="featured reveal sfx" style="margin-top:22px">
+      <div class="featured-glow" aria-hidden="true"></div>
+      <div class="featured-emoji">🥊</div>
+      <div class="featured-text">
+        <span class="featured-badge font-display">🕹️ 개별 게임</span>
+        <h2 class="featured-title font-display">매스 핏 플로우 <span class="en">Math&nbsp;Fit&nbsp;Flow</span></h2>
+        <p class="featured-desc">리듬에 맞춰 펀치와 스쿼트로 수학 문제를 격파하는 독립 게임! 학년 구분 없이 누구나 즐길 수 있어요.</p>
+      </div>
+      <div class="featured-go font-display">바로가기 <span class="arrow">→</span></div>
+    </a>
   </section>
 
   <!-- ══════════ 선생님 안내 ══════════ -->

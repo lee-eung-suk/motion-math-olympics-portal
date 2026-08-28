@@ -151,12 +151,12 @@ setTimeout(hideLoader, 3500); // 폰트/CDN 지연 대비 안전장치
   const track = document.getElementById('tickerTrack');
   if (!track) return;
   const items = [
-    '👊 펀치로 정답을 치고!',
-    '🏋️‍♂️ 스쿼트로 오답을 피하자!',
+    '🏃 뛰고 점프하며 배우는 수학',
     '🏅 1학년부터 6학년까지',
     '📷 웹캠 하나면 준비 끝',
     '🤸 앉아서 배우지 말고 움직이며 배우자',
     '⚡ AI 모션인식 수학 놀이터',
+    '🎮 매스 핏 플로우도 만나 보세요',
   ];
   const html = items.map((t) => `<span>${t}</span>`).join('');
   track.innerHTML = html + html; // 무한 루프용 2배
