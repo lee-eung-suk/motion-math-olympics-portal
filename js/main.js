@@ -86,34 +86,45 @@ const Sfx = (() => {
     return ctx;
   };
 
-  const tone = (freq, dur = 0.09, type = 'square', vol = 0.05) => {
+  /* at: 재생 시작 시각 오프셋(초). setTimeout 대신 오디오 클럭에 예약해
+     연속음이 어긋나지 않게 한다. */
+  const tone = (freq, dur = 0.09, type = 'square', vol = 0.06, at = 0) => {
     if (!on) return;
     const c = ensure();
     if (!c) return;
+    const t0 = c.currentTime + at;
     const osc = c.createOscillator();
     const gain = c.createGain();
     osc.type = type;
-    osc.frequency.setValueAtTime(freq, c.currentTime);
-    gain.gain.setValueAtTime(vol, c.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + dur);
+    osc.frequency.setValueAtTime(freq, t0);
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(vol, t0 + 0.012);   // 톡 하고 붙는 어택
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
     osc.connect(gain).connect(c.destination);
-    osc.start();
-    osc.stop(c.currentTime + dur);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.02);
   };
+
+  // 여러 음을 순서대로 예약 — [주파수, 시작오프셋] 목록
+  const seq = (notes, dur, type, vol) =>
+    notes.forEach(([f, at]) => tone(f, dur, type, vol, at));
 
   return {
     get on() { return on; },
+    unlock() { ensure(); },
     toggle() {
       on = !on;
       localStorage.setItem('mmo-sound', on ? 'on' : 'off');
-      if (on) tone(880, 0.1);
+      if (on) seq([[784, 0], [1047, 0.07]], 0.12, 'square', 0.07);
       return on;
     },
-    hover() { tone(660, 0.05, 'triangle', 0.03); },
-    click() { tone(523, 0.07); setTimeout(() => tone(784, 0.11), 60); },
-    punch() { tone(180, 0.09, 'sawtooth', 0.05); },
-    coin()  { tone(988, 0.06); setTimeout(() => tone(1319, 0.16), 60); },
-    nope()  { tone(196, 0.16, 'sawtooth', 0.04); },
+    hover() { tone(720, 0.05, 'triangle', 0.035); },
+    // 버튼 선택 — 밝게 올라가는 3음 아르페지오
+    click() { seq([[523, 0], [784, 0.055], [1047, 0.11]], 0.13, 'square', 0.075); },
+    // 잠긴 카드 — 낮게 깔리는 거절음
+    nope()  { seq([[233, 0], [175, 0.09]], 0.17, 'sawtooth', 0.05); },
+    punch() { tone(180, 0.09, 'sawtooth', 0.06); },
+    coin()  { seq([[988, 0], [1319, 0.06]], 0.16, 'square', 0.06); },
   };
 })();
 
@@ -216,6 +227,12 @@ setTimeout(hideLoader, 3500); // 폰트/CDN 지연 대비 안전장치
 })();
 
 /* ─────────── 공통 효과음 바인딩 ─────────── */
+/* 브라우저는 사용자 제스처 전까지 오디오를 막아 둔다. 첫 입력에서 미리 깨워
+   두지 않으면 resume()이 끝나기 전에 첫 클릭음이 잘려 나간다. */
+['pointerdown', 'keydown'].forEach((ev) =>
+  window.addEventListener(ev, () => Sfx.unlock(), { once: true })
+);
+
 document.querySelectorAll('.sfx').forEach((el) => {
   el.addEventListener('mouseenter', () => Sfx.hover());
   el.addEventListener('click', () => Sfx.click());
