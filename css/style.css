@@ -38,11 +38,11 @@ body {
 
 .loader-stage {
   position: relative; display: grid; place-items: center;
-  width: clamp(150px, 40vw, 210px); height: clamp(140px, 36vw, 190px);
+  width: clamp(200px, 56vw, 300px); height: clamp(185px, 50vw, 275px);
 }
 .loader-mascot {
   position: relative; z-index: 2;
-  width: clamp(120px, 32vw, 168px); height: auto;
+  width: clamp(165px, 46vw, 246px); height: auto;
   filter: drop-shadow(5px 6px 0 rgba(30, 41, 59, .18));
   animation: run-bob .42s infinite alternate ease-in-out;
 }
@@ -75,8 +75,8 @@ body {
   to   { transform: scale(.78); opacity: .3; }
 }
 .loader-title {
-  font-size: clamp(22px, 5vw, 34px); color: var(--ink);
-  -webkit-text-stroke: 5px #fff; paint-order: stroke fill;
+  font-size: clamp(24px, 5.6vw, 38px); color: var(--ink);
+  -webkit-text-stroke: 3px #fff; paint-order: stroke fill;
 }
 .loader-bar {
   width: min(260px, 62vw); height: 20px; background: #fff;
@@ -88,7 +88,7 @@ body {
   background: repeating-linear-gradient(45deg, var(--coral) 0 10px, #ff8f8f 10px 20px);
   animation: load-fill 1.2s ease-out forwards;
 }
-.loader-tip { font-size: 15px; color: #7a4b12; }
+.loader-tip { font-size: clamp(15px, 3.4vw, 18px); color: #7a4b12; }
 @keyframes load-fill { to { width: 100%; } }
 @keyframes run-bob {
   from { transform: translateY(2px)   rotate(-2.5deg) scaleY(.99); }
