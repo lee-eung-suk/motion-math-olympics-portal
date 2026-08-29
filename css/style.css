@@ -163,14 +163,17 @@ body {
 
 /* ─────────── 히어로 ─────────── */
 .hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: #fff; border: 3px solid var(--ink); border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-wrap: wrap; gap: 4px 8px; max-width: 100%;
+  background: #fff; border: 3px solid var(--ink); border-radius: 26px;
   padding: 7px 16px; font-size: clamp(12px, 2.6vw, 15px);
+  line-height: 1.45; text-align: center;
   box-shadow: 4px 4px 0 0 var(--ink);
   animation: pop-in .5s .1s backwards cubic-bezier(.34,1.56,.64,1);
 }
+.hero-badge b { color: var(--sky); }
 .blink-dot {
-  width: 9px; height: 9px; border-radius: 50%; background: var(--coral);
+  width: 9px; height: 9px; flex: none; border-radius: 50%; background: var(--coral);
   box-shadow: 0 0 0 0 rgba(255,107,107,.7); animation: blink 1.4s infinite;
 }
 @keyframes blink {
@@ -236,8 +239,8 @@ body {
 .hero-scope {
   display: inline-flex; align-items: center; flex-wrap: wrap;
   justify-content: center; gap: 10px;
-  margin: 16px 0 0; padding: 8px 8px 8px 10px;
-  background: #fff; border: 3px solid var(--ink); border-radius: 999px;
+  margin: 16px 0 0; padding: 8px 10px; max-width: 100%;
+  background: #fff; border: 3px solid var(--ink); border-radius: 26px;
   box-shadow: 5px 5px 0 0 var(--ink);
   animation: pop-in .5s .65s backwards ease-out;
 }
