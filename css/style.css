@@ -162,9 +162,11 @@ body {
 .sound-btn.off { opacity: .55; }
 
 /* ─────────── 히어로 ─────────── */
-/* 사운드 버튼(우측 상단 고정)이 좁은 화면에서 배지를 덮지 않도록 */
+/* 사운드 버튼(우측 상단 고정)이 좁은 화면에서 배지를 덮지 않도록.
+   Tailwind CDN은 런타임에 스타일을 뒤늦게 주입하므로 .pt-10과 명시도가
+   같으면 그쪽이 이긴다 — header를 붙여 명시도를 올린다. */
 @media (max-width: 700px) {
-  .hero-inner { padding-top: 74px; }
+  header .hero-inner { padding-top: 76px; }
 }
 .hero-badge {
   display: inline-flex; align-items: center; justify-content: center;
