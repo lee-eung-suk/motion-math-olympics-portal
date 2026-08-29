@@ -35,10 +35,48 @@ body {
   transition: opacity .5s ease, visibility .5s ease;
 }
 .loader.hide { opacity: 0; visibility: hidden; }
-.loader-mascot { font-size: clamp(56px, 14vw, 96px); animation: run-bob .5s infinite alternate ease-in-out; }
+
+.loader-stage {
+  position: relative; display: grid; place-items: center;
+  width: clamp(150px, 40vw, 210px); height: clamp(140px, 36vw, 190px);
+}
+.loader-mascot {
+  position: relative; z-index: 2;
+  width: clamp(120px, 32vw, 168px); height: auto;
+  filter: drop-shadow(5px 6px 0 rgba(30, 41, 59, .18));
+  animation: run-bob .42s infinite alternate ease-in-out;
+}
+/* 달리는 속도선 */
+.loader-speed {
+  position: absolute; left: -6%; top: 42%; width: 46%; height: 40%; z-index: 1;
+}
+.loader-speed i {
+  position: absolute; left: 0; height: 6px; border-radius: 999px;
+  background: rgba(255, 255, 255, .85);
+  animation: speed-line .55s linear infinite;
+}
+.loader-speed i:nth-child(1) { top: 6%;  width: 62%; animation-delay: 0s; }
+.loader-speed i:nth-child(2) { top: 42%; width: 88%; animation-delay: .14s; }
+.loader-speed i:nth-child(3) { top: 76%; width: 50%; animation-delay: .28s; }
+@keyframes speed-line {
+  0%   { opacity: 0; transform: translateX(26px) scaleX(.5); }
+  35%  { opacity: .95; }
+  100% { opacity: 0; transform: translateX(-34px) scaleX(1); }
+}
+/* 바닥 그림자 */
+.loader-shadow {
+  position: absolute; bottom: 4%; z-index: 0;
+  width: 46%; height: 13px; border-radius: 50%;
+  background: rgba(30, 41, 59, .18); filter: blur(1px);
+  animation: shadow-pulse .42s infinite alternate ease-in-out;
+}
+@keyframes shadow-pulse {
+  from { transform: scale(1);   opacity: .5; }
+  to   { transform: scale(.78); opacity: .3; }
+}
 .loader-title {
   font-size: clamp(22px, 5vw, 34px); color: var(--ink);
-  text-shadow: 3px 3px 0 #fff;
+  -webkit-text-stroke: 5px #fff; paint-order: stroke fill;
 }
 .loader-bar {
   width: min(260px, 62vw); height: 20px; background: #fff;
@@ -52,7 +90,10 @@ body {
 }
 .loader-tip { font-size: 15px; color: #7a4b12; }
 @keyframes load-fill { to { width: 100%; } }
-@keyframes run-bob { from { transform: translateY(0) rotate(-6deg); } to { transform: translateY(-14px) rotate(6deg); } }
+@keyframes run-bob {
+  from { transform: translateY(2px)   rotate(-2.5deg) scaleY(.99); }
+  to   { transform: translateY(-13px) rotate(2.5deg)  scaleY(1.01); }
+}
 
 /* ─────────── 배경 ─────────── */
 .bg-scene { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }

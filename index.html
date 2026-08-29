@@ -14,6 +14,8 @@
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏅</text></svg>" />
 
+<link rel="preload" as="image" href="assets/runner.png" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@700&display=swap" rel="stylesheet" />
@@ -53,7 +55,11 @@
 
 <!-- ══════════ 로딩 화면 ══════════ -->
 <div id="loader" class="loader">
-  <div class="loader-mascot">🏃‍♂️</div>
+  <div class="loader-stage" aria-hidden="true">
+    <span class="loader-speed"><i></i><i></i><i></i></span>
+    <img class="loader-mascot" src="assets/runner.png" alt="" />
+    <span class="loader-shadow"></span>
+  </div>
   <div class="loader-title font-display">모션인식 수학 올림픽</div>
   <div class="loader-bar"><span></span></div>
   <p class="loader-tip font-display">준비운동 중… 몸을 풀어 주세요! 💪</p>
