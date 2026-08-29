@@ -277,19 +277,24 @@ if (soundBtn) {
 })();
 
 /* ─────────── 매스 핏 플로우 라이브 데모 ─────────── */
+/* 실제 게임처럼: 오답 장애물이 활주로를 따라 날아오면 스쿼트로 숙여 피하고,
+   정답 장애물이 오면 펀치로 격파한다. */
 (() => {
-  const bodyEl   = document.getElementById('demoBody');
-  const qEl      = document.getElementById('demoQ');
-  const ansEl    = document.getElementById('demoAnswers');
-  const burstEl  = document.getElementById('demoBurst');
-  const shockEl  = document.getElementById('demoShock');
-  const plusEl   = document.getElementById('demoPlus');
-  const playerEl = document.getElementById('demoPlayer');
-  const scoreEl  = document.getElementById('demoScore');
-  const comboEl  = document.getElementById('demoCombo');
-  const hintEl   = document.getElementById('demoHint');
-  if (!qEl || !ansEl || !playerEl) return;
+  const bodyEl     = document.getElementById('demoBody');
+  const cardEl     = document.getElementById('demoCard');
+  const qEl        = document.getElementById('demoQ');
+  const trackEl    = document.getElementById('demoTrack');
+  const burstEl    = document.getElementById('demoBurst');
+  const shockEl    = document.getElementById('demoShock');
+  const plusEl     = document.getElementById('demoPlus');
+  const playerEl   = document.getElementById('demoPlayer');
+  const scoreEl    = document.getElementById('demoScore');
+  const comboEl    = document.getElementById('demoCombo');
+  const calloutEl  = document.getElementById('demoCallout');
+  const hintEl     = document.getElementById('demoHint');
+  if (!qEl || !trackEl || !playerEl) return;
 
+  const FLY_MS = 1300;   // 장애물이 날아오는 시간
   const poses = {
     idle:  playerEl.querySelector('.pose-idle'),
     punch: playerEl.querySelector('.pose-punch'),
@@ -313,80 +318,100 @@ if (soundBtn) {
     el.classList.add(cls);
   };
 
+  // 빈칸 채우기 문제 — 실제 게임과 같은 형식
   const makeProblem = () => {
     const kind = Math.random();
     let a, b, text, answer;
-    if (kind < 0.4) {
+    if (kind < 0.45) {
       a = 2 + Math.floor(Math.random() * 8);
       b = 2 + Math.floor(Math.random() * 8);
-      text = `${a} × ${b} = ?`; answer = a * b;
-    } else if (kind < 0.7) {
-      a = 12 + Math.floor(Math.random() * 60);
-      b = 3 + Math.floor(Math.random() * 30);
-      text = `${a} + ${b} = ?`; answer = a + b;
+      text = `${a} × ▢ = ${a * b}`; answer = b;
+    } else if (kind < 0.8) {
+      a = 3 + Math.floor(Math.random() * 40);
+      b = 2 + Math.floor(Math.random() * 30);
+      text = `${a} + ▢ = ${a + b}`; answer = b;
     } else {
-      a = 30 + Math.floor(Math.random() * 60);
-      b = 3 + Math.floor(Math.random() * 25);
-      text = `${a} − ${b} = ?`; answer = a - b;
+      a = 30 + Math.floor(Math.random() * 50);
+      b = 3 + Math.floor(Math.random() * 20);
+      text = `${a} − ▢ = ${a - b}`; answer = b;
     }
-    const opts = new Set([answer]);
-    while (opts.size < 3) {
-      const delta = 1 + Math.floor(Math.random() * 9);
-      const wrong = answer + (Math.random() < 0.5 ? -delta : delta);
-      if (wrong > 0) opts.add(wrong);
-    }
-    return { text, answer, options: [...opts].sort(() => Math.random() - 0.5) };
+    let wrong;
+    do {
+      const delta = 1 + Math.floor(Math.random() * 6);
+      wrong = answer + (Math.random() < 0.5 ? -delta : delta);
+    } while (wrong === answer || wrong <= 0);
+    return { text, answer, wrong };
+  };
+
+  const spawnObstacle = (value, correct) => {
+    const el = document.createElement('div');
+    el.className = `obs ${correct ? 'obs-right' : 'obs-wrong'}`;
+    el.style.setProperty('--fly', `${FLY_MS}ms`);
+    el.innerHTML = `
+      <span class="obs-num">${value}</span>
+      <span class="obs-body"><i class="eye"></i><i class="eye"></i></span>
+    `;
+    trackEl.appendChild(el);
+    void el.offsetWidth;
+    el.classList.add('fly');
+    return el;
+  };
+
+  const impactAt = (el) => {
+    const box = el.getBoundingClientRect();
+    const stage = bodyEl.getBoundingClientRect();
+    return {
+      x: box.left + box.width / 2 - stage.left,
+      y: box.top + box.height / 2 - stage.top,
+    };
   };
 
   const round = () => {
     clearAll();
+    trackEl.innerHTML = '';
     const p = makeProblem();
 
-    qEl.classList.remove('leave');
-    qEl.textContent = p.text;
-    restart(qEl, 'enter');
-
-    ansEl.innerHTML = '';
-    const nodes = p.options.map((v) => {
-      const n = document.createElement('div');
-      n.className = 'ans';
-      n.textContent = v;
-      ansEl.appendChild(n);
-      return n;
-    });
-
-    hintEl.textContent = '정답을 향해 펀치! 👊';
+    qEl.innerHTML = p.text.replace('▢', '<i class="blank">?</i>');
+    restart(cardEl, 'enter');
+    hintEl.textContent = '빈칸에 들어갈 수를 펀치! 👊';
     hintEl.classList.remove('good');
     setPose('idle');
 
-    // ① 오답은 스쿼트로 회피 — 좌우로 튕겨나감
+    /* ① 오답 장애물이 날아온다 → 스쿼트로 숙여 피하기 */
+    const wrongObs = spawnObstacle(p.wrong, false);
+
     later(() => {
-      const answerIdx = p.options.indexOf(p.answer);
-      nodes.forEach((n, i) => {
-        if (i === answerIdx) return;
-        n.classList.add('dodge', i < answerIdx ? 'dodge-l' : 'dodge-r');
-      });
       setPose('squat');
-      hintEl.textContent = '오답은 스쿼트로 피하기! 🏋️';
-      later(() => setPose('idle'), 520);
-    }, 900);
+      restart(calloutEl, 'go');
+      calloutEl.textContent = '숙여!';
+      hintEl.textContent = '오답은 숙여서 피하기! 🏋️';
+      Sfx.nope();
+    }, FLY_MS - 260);
 
-    // ② 정답을 향해 펀치
     later(() => {
-      const target = nodes[p.options.indexOf(p.answer)];
-      const box = target.getBoundingClientRect();
-      const stage = bodyEl.getBoundingClientRect();
-      const x = box.left + box.width / 2 - stage.left;
-      const y = box.top + box.height / 2 - stage.top;
+      wrongObs.classList.remove('fly');
+      wrongObs.classList.add('over');       // 머리 위로 지나감
+    }, FLY_MS);
 
-      setPose('punch');
-      Sfx.punch();
+    later(() => { setPose('idle'); }, FLY_MS + 420);
+    later(() => wrongObs.remove(), FLY_MS + 700);
+
+    /* ② 정답 장애물이 날아온다 → 펀치로 격파 */
+    const t2 = FLY_MS + 700;
+    later(() => {
+      const rightObs = spawnObstacle(p.answer, true);
+      hintEl.textContent = '정답이다! 펀치 준비 👊';
 
       later(() => {
-        target.classList.add('hit');
-        nodes.forEach((n) => { if (n !== target) n.classList.add('gone'); });
+        setPose('punch');
+        Sfx.punch();
+      }, FLY_MS - 150);
 
-        // 타격감: 화면 흔들림 + 충격파 + 텍스트 버스트
+      later(() => {
+        const { x, y } = impactAt(rightObs);
+        rightObs.classList.remove('fly');
+        rightObs.classList.add('boom');
+
         restart(bodyEl, 'shake');
         shockEl.style.left = `${x}px`;
         shockEl.style.top = `${y}px`;
@@ -396,7 +421,6 @@ if (soundBtn) {
         burstEl.style.top = `${y}px`;
         restart(burstEl, 'go');
 
-        // 점수 & 콤보
         score += 10;
         combo += 1;
         scoreEl.textContent = score;
@@ -416,14 +440,12 @@ if (soundBtn) {
         Sfx.coin();
         hintEl.textContent = '정답! 나이스 펀치 🎉';
         hintEl.classList.add('good');
-      }, 170);
+      }, FLY_MS);
 
-      later(() => setPose('idle'), 620);
-    }, 1700);
+      later(() => { setPose('idle'); rightObs.remove(); }, FLY_MS + 480);
+    }, t2);
 
-    // ③ 문제 퇴장 후 다음 라운드
-    later(() => qEl.classList.add('leave'), 3150);
-    later(round, 3500);
+    later(round, t2 + FLY_MS + 900);
   };
 
   // 화면에 보일 때만 동작 (배터리·성능 배려)
@@ -431,7 +453,7 @@ if (soundBtn) {
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (e.isIntersecting && !running) { running = true; round(); }
-      else if (!e.isIntersecting && running) { running = false; clearAll(); }
+      else if (!e.isIntersecting && running) { running = false; clearAll(); trackEl.innerHTML = ''; }
     });
   }, { threshold: 0.25 });
   io.observe(document.querySelector('.demo-stage'));
