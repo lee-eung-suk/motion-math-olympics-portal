@@ -276,21 +276,42 @@ if (soundBtn) {
   nums.forEach((n) => io.observe(n));
 })();
 
-/* ─────────── 히어로 라이브 데모 ─────────── */
+/* ─────────── 매스 핏 플로우 라이브 데모 ─────────── */
 (() => {
-  const qEl = document.getElementById('demoQ');
-  const ansEl = document.getElementById('demoAnswers');
-  const fistEl = document.getElementById('demoFist');
-  const burstEl = document.getElementById('demoBurst');
+  const bodyEl   = document.getElementById('demoBody');
+  const qEl      = document.getElementById('demoQ');
+  const ansEl    = document.getElementById('demoAnswers');
+  const burstEl  = document.getElementById('demoBurst');
+  const shockEl  = document.getElementById('demoShock');
+  const plusEl   = document.getElementById('demoPlus');
   const playerEl = document.getElementById('demoPlayer');
-  const scoreEl = document.getElementById('demoScore');
-  const hintEl = document.getElementById('demoHint');
-  if (!qEl || !ansEl) return;
+  const scoreEl  = document.getElementById('demoScore');
+  const comboEl  = document.getElementById('demoCombo');
+  const hintEl   = document.getElementById('demoHint');
+  if (!qEl || !ansEl || !playerEl) return;
+
+  const poses = {
+    idle:  playerEl.querySelector('.pose-idle'),
+    punch: playerEl.querySelector('.pose-punch'),
+    squat: playerEl.querySelector('.pose-squat'),
+  };
+  const setPose = (name) => {
+    Object.entries(poses).forEach(([k, el]) => el && el.classList.toggle('is-on', k === name));
+    playerEl.classList.toggle('punch', name === 'punch');
+    playerEl.classList.toggle('squat', name === 'squat');
+  };
 
   let score = 0;
+  let combo = 0;
   let timers = [];
   const later = (fn, ms) => timers.push(setTimeout(fn, ms));
   const clearAll = () => { timers.forEach(clearTimeout); timers = []; };
+
+  const restart = (el, cls) => {
+    el.classList.remove(cls);
+    void el.offsetWidth;
+    el.classList.add(cls);
+  };
 
   const makeProblem = () => {
     const kind = Math.random();
@@ -320,10 +341,10 @@ if (soundBtn) {
   const round = () => {
     clearAll();
     const p = makeProblem();
+
+    qEl.classList.remove('leave');
     qEl.textContent = p.text;
-    qEl.style.animation = 'none';
-    void qEl.offsetWidth;
-    qEl.style.animation = 'pop-in .35s ease';
+    restart(qEl, 'enter');
 
     ansEl.innerHTML = '';
     const nodes = p.options.map((v) => {
@@ -335,53 +356,74 @@ if (soundBtn) {
     });
 
     hintEl.textContent = '정답을 향해 펀치! 👊';
-    fistEl.className = 'demo-fist';
-    playerEl.className = 'demo-player';
+    hintEl.classList.remove('good');
+    setPose('idle');
 
-    // 오답들은 스쿼트로 회피
+    // ① 오답은 스쿼트로 회피 — 좌우로 튕겨나감
     later(() => {
-      nodes.forEach((n, i) => { if (p.options[i] !== p.answer) n.classList.add('dodge'); });
-      playerEl.classList.add('squat');
+      const answerIdx = p.options.indexOf(p.answer);
+      nodes.forEach((n, i) => {
+        if (i === answerIdx) return;
+        n.classList.add('dodge', i < answerIdx ? 'dodge-l' : 'dodge-r');
+      });
+      setPose('squat');
       hintEl.textContent = '오답은 스쿼트로 피하기! 🏋️';
-      later(() => playerEl.classList.remove('squat'), 480);
+      later(() => setPose('idle'), 520);
     }, 900);
 
-    // 정답을 향해 펀치
+    // ② 정답을 향해 펀치
     later(() => {
-      const idx = p.options.indexOf(p.answer);
-      const target = nodes[idx];
+      const target = nodes[p.options.indexOf(p.answer)];
       const box = target.getBoundingClientRect();
-      const stage = ansEl.parentElement.getBoundingClientRect();
+      const stage = bodyEl.getBoundingClientRect();
       const x = box.left + box.width / 2 - stage.left;
       const y = box.top + box.height / 2 - stage.top;
 
-      fistEl.classList.add('go');
-      fistEl.style.transform = `translate(${x - 22}px, ${y - 140}px) scale(1.25) rotate(-12deg)`;
-      playerEl.classList.add('punch');
+      setPose('punch');
       Sfx.punch();
 
       later(() => {
         target.classList.add('hit');
+        nodes.forEach((n) => { if (n !== target) n.classList.add('gone'); });
+
+        // 타격감: 화면 흔들림 + 충격파 + 텍스트 버스트
+        restart(bodyEl, 'shake');
+        shockEl.style.left = `${x}px`;
+        shockEl.style.top = `${y}px`;
+        restart(shockEl, 'go');
+
         burstEl.style.left = `${x}px`;
         burstEl.style.top = `${y}px`;
-        burstEl.classList.remove('go');
-        void burstEl.offsetWidth;
-        burstEl.classList.add('go');
-        Sfx.coin();
-        score += 10;
-        scoreEl.textContent = score;
-        hintEl.textContent = '정답! 나이스 펀치 🎉';
-        nodes.forEach((n) => { if (n !== target) n.classList.add('gone'); });
-      }, 190);
+        restart(burstEl, 'go');
 
-      later(() => {
-        fistEl.className = 'demo-fist';
-        fistEl.style.transform = '';
-        playerEl.classList.remove('punch');
-      }, 700);
+        // 점수 & 콤보
+        score += 10;
+        combo += 1;
+        scoreEl.textContent = score;
+        restart(scoreEl, 'bump');
+
+        plusEl.textContent = combo >= 2 ? `+10 ×${combo}` : '+10';
+        plusEl.style.left = `${x}px`;
+        plusEl.style.top = `${y}px`;
+        restart(plusEl, 'go');
+
+        if (combo >= 2) {
+          comboEl.textContent = `${combo} COMBO! 🔥`;
+          comboEl.classList.add('show');
+          restart(comboEl, 'pump');
+        }
+
+        Sfx.coin();
+        hintEl.textContent = '정답! 나이스 펀치 🎉';
+        hintEl.classList.add('good');
+      }, 170);
+
+      later(() => setPose('idle'), 620);
     }, 1700);
 
-    later(round, 3400);
+    // ③ 문제 퇴장 후 다음 라운드
+    later(() => qEl.classList.add('leave'), 3150);
+    later(round, 3500);
   };
 
   // 화면에 보일 때만 동작 (배터리·성능 배려)

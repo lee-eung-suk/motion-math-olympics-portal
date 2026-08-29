@@ -86,7 +86,8 @@
 
       <h1 class="hero-title font-display" id="heroTitle" aria-label="모션인식 수학 올림픽!">
         <span class="ht-line">
-          <span class="ht-emoji">🏃‍♂️</span><span class="jump" style="--d:.00s">모</span><span class="jump" style="--d:.05s">션</span><span class="jump" style="--d:.10s">인</span><span class="jump" style="--d:.15s">식</span>
+          <img class="ht-runner" src="assets/runner.png" alt="" aria-hidden="true" />
+          <span class="jump" style="--d:.00s">모</span><span class="jump" style="--d:.05s">션</span><span class="jump" style="--d:.10s">인</span><span class="jump" style="--d:.15s">식</span>
         </span>
         <span class="ht-line">
           <span class="jump gradient-word" style="--d:.20s">수</span><span class="jump gradient-word" style="--d:.25s">학</span>
@@ -95,18 +96,14 @@
       </h1>
 
       <p class="hero-sub font-display">몸을 움직이며 신나게 푸는 초등 수학 교실</p>
-
-      <div class="hero-tag font-display">
-        <span class="tag-chip chip-coral">🏃 뛰고 점프하며 배우는 수학</span>
-        <span class="tag-chip chip-mint">🏅 1학년부터 6학년까지 학년별 미션</span>
-      </div>
     </div>
 
-    <!-- CTA -->
-    <div class="cta-row">
-      <a href="#grades" class="btn btn-sun font-display sfx">🎮 학년 골라서 시작하기</a>
+    <!-- CTA — 딱 3가지 -->
+    <nav class="cta-row" aria-label="주요 메뉴">
       <a href="#howto" class="btn btn-white font-display sfx">❓ 어떻게 하나요?</a>
-    </div>
+      <a href="#grades" class="btn btn-sun font-display sfx">🎮 학년 골라서 시작하기</a>
+      <a href="#extra" class="btn btn-mint font-display sfx">🕹️ 기타 수학 게임</a>
+    </nav>
   </div>
 
   <!-- 흐르는 띠 -->
@@ -168,19 +165,31 @@
 
     <!-- 매스 핏 플로우 라이브 데모 -->
     <section class="demo-stage reveal" style="margin-top:28px" aria-label="매스 핏 플로우 미리보기">
-      <div class="demo-frame">
+      <div class="demo-frame" id="demoFrame">
         <div class="demo-topbar font-display">
           <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
           <span class="demo-cam">🎥 CAM ON</span>
+          <span class="demo-combo font-display" id="demoCombo"></span>
           <span class="demo-score">SCORE <b id="demoScore">0</b></span>
         </div>
 
-        <div class="demo-body">
+        <div class="demo-body" id="demoBody">
+          <div class="demo-spotlight" aria-hidden="true"></div>
+          <div class="demo-beat" aria-hidden="true"></div>
+
           <div class="demo-question font-display" id="demoQ">7 × 8 = ?</div>
           <div class="demo-answers" id="demoAnswers"></div>
-          <div class="demo-fist" id="demoFist">👊</div>
-          <div class="demo-burst" id="demoBurst">POW!</div>
-          <div class="demo-player" id="demoPlayer">🧑‍🎤</div>
+
+          <div class="demo-shock" id="demoShock" aria-hidden="true"></div>
+          <div class="demo-burst font-hand" id="demoBurst">POW!</div>
+          <div class="demo-plus font-display" id="demoPlus">+10</div>
+
+          <div class="demo-player" id="demoPlayer" aria-hidden="true">
+            <img class="pose pose-idle  is-on" src="assets/player-idle.png"  alt="" />
+            <img class="pose pose-punch"       src="assets/player-punch.png" alt="" />
+            <img class="pose pose-squat"       src="assets/player-squat.png" alt="" />
+          </div>
+
           <div class="demo-hint font-display" id="demoHint">정답을 향해 펀치! 👊</div>
         </div>
       </div>
@@ -222,6 +231,12 @@
     <div class="footer-emojis">🥇 🏃 🥊 🏋️ 🎯 ⚾ ❄️ ☀️</div>
     <p class="footer-title font-display">모션인식 수학 올림픽</p>
     <p class="footer-sub">몸을 움직이며 신나게 푸는 초등 수학 교실</p>
+
+    <p class="footer-maker font-display">
+      <span class="maker-label">만든이</span>
+      경북 소천초 교사 <b>이응석</b>
+    </p>
+
     <p class="footer-copy">© 2026 Motion Math Olympics · 초등 수학 신체활동 학습 포털</p>
   </div>
 </footer>
